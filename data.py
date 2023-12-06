@@ -36,7 +36,7 @@ def on_message(client, userdata, msg):
     
 # Example usage
     print(payload['temp'])
-    append_to_csv('example.csv', [str(payload['temp']),str(payload['humid'])])
+    append_to_csv('example.csv', [str(payload['temp']),str(payload['humid']),str(payload['date'])])
     return payload
 
 # Create an MQTT client

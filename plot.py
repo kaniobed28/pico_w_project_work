@@ -1,39 +1,33 @@
+import random
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+import matplotlib.animation as animation
+from matplotlib import style
 import pandas as pd
 
-# Load your data from CSV using Pandas
-csv_path = 'example.csv'  # Replace with the path to your CSV file
-csv_headers = ["temp", "humid"]
-df = pd.read_csv(csv_path, header=None, names=csv_headers)
-x_data, y_data = [], []
+data_path = "example.csv"
 
-# Initialize the plot
-fig, ax = plt.subplots()
-line, = ax.plot([], [], 'bo-', label='Live Data')  # Empty initial plot
+fig = plt.figure()
+ax1= fig.add_subplot(1,1,1)
 
-# Set up the plot axis labels and title
-ax.set_xlabel('X-axis Label')
-ax.set_ylabel('Y-axis Label')
-ax.set_title('Live Plot Example')
-ax.legend()
 
-# Function to initialize the plot
-def init():
-    line.set_data([], [])
-    return line,
+def animate(i):
+    csv_path = data_path 
+    csv_headers = ["temp", "humid","date"]
+    df = pd.read_csv(csv_path, header=None, names=csv_headers)
 
-# Function to update the plot data
-def update(frame):
-    x_data.append(df['temp'].iloc[frame])
-    y_data.append(df['humid'].iloc[frame])
-    line.set_data(x_data, y_data)
-    ax.relim()  # Update the limits of the axes
-    ax.autoscale_view(True, True, True)  # Autoscale the view
-    return line,
 
-# Create the animation
-ani = FuncAnimation(fig, update, frames=len(df), init_func=init, blit=True)
+    average_temp = df["temp"].mean()
+    min_temp = df["temp"].min()
+    max_temp = df["temp"].max()
+    ax1.clear()
+    
+    ax1.scatter(df["date"],df["temp"], label= 'temperature',c='g')
 
-# Show the live plot
+    ax1.set_xlabel("Time")
+    ax1.set_title(f"Average temp: {average_temp} max temp: {max_temp} min temp: {min_temp}")
+
+    ax1.set_xticks([])
+    ax1.legend()
+
+ani = animation.FuncAnimation(fig,animate,interval = 1000)
 plt.show()
